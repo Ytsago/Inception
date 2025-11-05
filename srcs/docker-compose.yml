@@ -1,0 +1,23 @@
+services:
+ nginx:
+  container_name: nginx
+  build:
+   context: ./requirements/nginx/
+  ports:
+   - 4242:443
+  # network: 
+   # - Inception
+
+ # mariadb:
+  # container_name: mariadb
+  # build:
+   # context: ./requirements/mariaDB/
+  # depend_on:
+   # - nginx
+  # network: 
+   # - Inception
+
+# network:
+ # Inception:
+ # driver: bridge
+ # attachable: true
