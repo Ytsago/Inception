@@ -5,19 +5,31 @@ services:
    context: ./requirements/nginx/
   ports:
    - 4242:443
-  # network: 
-   # - Inception
+  networks: 
+   - Inception
+  depends_on:
+   - mariadb
+   # - wordpress
+  restart: always
 
- # mariadb:
-  # container_name: mariadb
-  # build:
-   # context: ./requirements/mariaDB/
-  # depend_on:
-   # - nginx
-  # network: 
-   # - Inception
+ mariadb:
+  container_name: mariadb
+  build:
+   context: ./requirements/mariadb/
+  networks: 
+   - Inception
+  restart: always
+# wordpress:
+ # container_name: wordpress
+ # build:
+  # context: ./requirements/wordpress/
+ # networks:
+  # - Inception
+ # depends_on:
+  # - mariadb
+ 		# :  restart: always
 
-# network:
- # Inception:
- # driver: bridge
+networks:
+ Inception:
+  driver: bridge
  # attachable: true
