@@ -16,3 +16,5 @@ status:
 
 clear: down
 	sudo docker system prune --all -f
+	sudo docker volume rm $(sudo docker volume ls -q)
+

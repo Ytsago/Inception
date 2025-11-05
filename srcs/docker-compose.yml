@@ -9,8 +9,10 @@ services:
    - Inception
   depends_on:
    - mariadb
-   # - wordpress
+   - wordpress
   restart: always
+  volumes:
+   - volume-web:/var/www/html/
 
  mariadb:
   container_name: mariadb
@@ -19,17 +21,30 @@ services:
   networks: 
    - Inception
   restart: always
-# wordpress:
- # container_name: wordpress
- # build:
-  # context: ./requirements/wordpress/
- # networks:
-  # - Inception
- # depends_on:
-  # - mariadb
- 		# :  restart: always
+  # environment:
+   # MARIA_USER: {WORDPRESS_DB_USER}
+   # MARIA_PASS: {WORDPRESS_DB_PASSWORD}
+   # MARIA_DB: {WORDPRESS_DB_NAME}
+  volumes:
+   - volume-db:/srv/mysql-db
+
+ wordpress:
+  container_name: wordpress
+  build:
+   context: ./requirements/wordpress/
+  networks:
+   - Inception
+  depends_on:
+   - mariadb
+  restart: always
+  volumes:
+   - volume-web:/var/www/html/
 
 networks:
  Inception:
   driver: bridge
+ 
+volumes:
+ volume-db:
+ volume-web:
  # attachable: true

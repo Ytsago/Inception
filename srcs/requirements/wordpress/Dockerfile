@@ -1,10 +1,9 @@
 FROM debian:12
 
-RUN apt update -y && apt install -y wordpress
+RUN apt update && apt install -y wget
 
-COPY content/index.html /var/www/html/index.nginx-debian.html
+RUN wget https://wordpress.org/latest.tar.gz && \
+tar -xzf latest.tar.gz && rm latest.tar.gz
 
-EXPOSE 80
-
-CMD []
+CMD ["tail", "-f" ,"/dev/urandom"]
 
