@@ -14,7 +14,9 @@ status:
 	@sudo docker image ls
 	@sudo docker ps -a
 
-clear: down
-	sudo docker system prune --all -f
-	sudo docker volume rm $(sudo docker volume ls -q)
+clear_vol:
+	rm -rf /var/www/html/db/*
+	rm -rf /var/www/html/web/*
 
+clear: down clear_vol
+	sudo docker system prune --all -f

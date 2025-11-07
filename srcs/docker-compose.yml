@@ -46,5 +46,15 @@ networks:
  
 volumes:
  volume-db:
+  driver: local
+  driver_opts:
+   type: none
+   o: bind
+   device: /var/www/html/db
  volume-web:
+  driver: local
+  driver_opts:
+   type: none
+   o: bind
+   device: /var/www/html/web
  # attachable: true
