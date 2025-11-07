@@ -39,6 +39,11 @@ services:
   restart: always
   volumes:
    - volume-web:/var/www/html/
+  environment:
+   DB_NAME: ${WP_NANE} 
+   DB_USER: ${WP_USER}
+   DB_PASS: ${WP_PASS}
+   DB_HOST: ${WP_HOST}
 
 networks:
  Inception:
