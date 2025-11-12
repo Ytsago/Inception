@@ -19,7 +19,7 @@ GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'%';
 FLUSH PRIVILEGES;
 eof
 fi
-
+sed -i "s/\(bind-address\s*= \).*/\1 0.0.0.0/" /etc/mysql/mariadb.conf.d/50-server.cnf
 service mariadb stop
 
 exec /usr/bin/mariadbd-safe

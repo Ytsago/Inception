@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sleep 30
+sleep 10
 
 if [ -d wordpress ]; then
 mv wordpress /var/www/html/wordpress

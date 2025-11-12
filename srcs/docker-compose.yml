@@ -25,7 +25,6 @@ services:
    DB_NAME: ${WP_NAME} 
    DB_USER: ${WP_USER}
    DB_PASS: ${WP_PASS}
-   DB_HOST: ${WP_HOST}
   volumes:
    - volume-db:/var/lib/mysql
 
@@ -44,7 +43,7 @@ services:
    DB_NAME: ${WP_NAME} 
    DB_USER: ${WP_USER}
    DB_PASS: ${WP_PASS}
-   DB_HOST: ${WP_HOST}
+   DB_HOST: mariadb
 
 networks:
  Inception:
