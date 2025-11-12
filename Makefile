@@ -15,8 +15,10 @@ status:
 	@sudo docker ps -a
 
 clear_vol:
-	rm -rf /var/www/html/db/*
-	rm -rf /var/www/html/web/*
+	sudo rm -rf /var/www/html/db/*
+	sudo rm -rf /var/www/html/web/*
 
 clear: down clear_vol
 	sudo docker system prune --all -f
+
+re: clear up

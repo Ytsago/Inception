@@ -1,0 +1,190 @@
+FROM debian:12
+
+RUN apt update -y && apt install -y mariadb-server 
+
+RUN apt install mariadb-client
+
+RUN apt install -y mysql-common
+
+COPY setup.sh /
+
+RUN chmod +x setup.sh
+
+ENTRYPOINT ["sh", "setup.sh"]
+#!/bin/bash/
+
+mysqld_safe --datadir=/var/lib/mysql &
+
+until mariadb -e "SELECT 1" >/dev/null 2>&1; do
+    sleep 1
+done
+
+if ! mariadb -e 'SHOW DATABASES;' | grep -q $DB_NAME ; then
+mariadb << eof
+DROP DATABASE IF EXISTS test;
+CREATE DATABASE $DB_NAME;
+USE $DB_NAME;
+CREATE TABLE USER (userid int AUTO_INCREMENT PRIMARY KEY, username varchar(255), role varchar(255));
+INSERT INTO USER (username, role) VALUES('User1', 'admin');
+INSERT INTO USER (username, role) VALUES('User2', 'user');
+CREATE USER $DB_HOST IDENTIFIED BY $DB_PASS;
+GRANT ALL PRIVILEGES ON $DB_NAME.* TO $DB_HOST;
+FLUSH PRIVILEGES;
+EXIT;
+eof
+fi
+
+service mariadb stop
+
+exec /usr/bin/mariadbd-safe
+user www-data;
+worker_processes auto;
+worker_cpu_affinity auto;
+pid /run/nginx.pid;
+error_log /var/log/nginx/error.log;
+include /etc/nginx/modules-enabled/*.conf;
+
+events {
+	worker_connections 768;
+	# multi_accept on;
+}
+
+http {
+
+	##
+	# Basic Settings
+	##
+
+	sendfile on;
+	tcp_nopush on;
+	types_hash_max_size 2048;
+	server_tokens off; # Recommended practice is to turn this off
+
+	# server_names_hash_bucket_size 64;
+	# server_name_in_redirect off;
+
+	include /etc/nginx/mime.types;
+	default_type application/octet-stream;
+
+	##
+	# SSL Settings
+	##
+
+	ssl_protocols TLSv1.3; # Dropping SSLv3 (POODLE), TLS 1.0, 1.1
+	ssl_prefer_server_ciphers off; # Don't force server cipher order.
+
+	##
+	# Logging Settings
+	##
+
+	access_log /var/log/nginx/access.log;
+
+	##
+	# Gzip Settings
+	##
+
+	gzip on;
+
+	# gzip_vary on;
+	# gzip_proxied any;
+	# gzip_comp_level 6;
+	# gzip_buffers 16 8k;
+	# gzip_http_version 1.1;
+	# gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+	##
+	# Virtual Host Configs
+	##
+
+	include /etc/nginx/conf.d/*.conf;
+	include /etc/nginx/sites-enabled/*;
+
+	server {
+		listen     443 ssl;
+		server_name secros.42.fr;
+		server_name www.secros.42.fr;
+
+		ssl_certificate /etc/ssl/certs/nginx_selfcert.crt;
+		ssl_certificate_key /etc/ssl/private/nginx_selfkey.key;
+		root /var/www/html/;
+
+	    location / {
+			autoindex on;
+        	try_files $uri $uri/ /index.php?$query_string;
+    	}
+
+    	location ~ \.php$ {
+        	autoindex on;
+        	try_files $uri =404;
+        # fastcgi_pass unix:/var/run/php-fpm83.sock;
+        	fastcgi_pass wordpress:9000;
+        	fastcgi_index index.php;
+        	fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        	include fastcgi_params;
+    	}
+    }
+}
+
+
+#mail {
+#	# See sample authentication script at:
+#	# http://wiki.nginx.org/ImapAuthenticateWithApachePhpScript
+#
+#	# auth_http localhost/auth.php;
+#	# pop3_capabilities "TOP" "USER";
+#	# imap_capabilities "IMAP4rev1" "UIDPLUS";
+#
+#
+#	server {
+#		listen     localhost:143;
+#		protocol   imap;
+#		proxy      on;
+#	}
+#}
+FROM debian:12
+
+RUN apt update -y && apt install -y nginx
+
+RUN apt install -y openssl && mkdir -p /etc/ssl/private /etc/ssl/certs && \
+openssl req -newkey rsa:2048 -x509 -nodes -keyout /etc/ssl/private/nginx_selfkey.key \
+-out /etc/ssl/certs/nginx_selfcert.crt -subj "/C=FR/ST=RHONE/L=Lyon/O=42/OU=Student/CN=secros.42.fr"
+
+RUN apt remove -y openssl
+
+# COPY content/index.html /var/www/html/index.nginx-debian.html
+
+COPY based.conf /etc/nginx/nginx.conf
+
+EXPOSE 443
+
+CMD ["nginx", "-g", "daemon off;"]
+
+FROM debian:12
+
+RUN apt update && apt install -y wget
+RUN apt install php8.2-fpm -y
+
+RUN wget https://wordpress.org/latest.tar.gz && \
+tar -xzf latest.tar.gz && rm latest.tar.gz
+
+COPY setup.sh /
+
+ENTRYPOINT ["sh", "setup.sh"]
+#!/bin/bash
+
+if [ -d wordpress ]; then
+mv wordpress /var/www/html/wordpress
+cd /var/www/html/
+chown -R www-data:www-data wordpress/
+cd wordpress/
+find . -type d -exec chmod 755 {} \;
+find . -type f -exec chmod 644 {} \;
+mv wp-config-sample.php wp-config.php
+
+sed -i "s/\(define( 'DB_NAME', '\).*$/\1$DB_NAME' );/" wp-config.php
+sed -i "s/\(define( 'DB_USER', '\).*$/\1$DB_USER' );/" wp-config.php
+sed -i "s/\(define( 'DB_PASSWORD', '\).*$/\1$DB_PASS' );/" wp-config.php
+sed -i "s/\(define( 'DB_HOST', '\).*$/\1$DB_HOST' );/" wp-config.php
+fi
+
+exec /usr/sbin/php-fpm8.2 -F

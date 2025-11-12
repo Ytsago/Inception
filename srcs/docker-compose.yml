@@ -21,12 +21,13 @@ services:
   networks: 
    - Inception
   restart: always
-  # environment:
-   # MARIA_USER: {WORDPRESS_DB_USER}
-   # MARIA_PASS: {WORDPRESS_DB_PASSWORD}
-   # MARIA_DB: {WORDPRESS_DB_NAME}
+  environment:
+   DB_NAME: ${WP_NAME} 
+   DB_USER: ${WP_USER}
+   DB_PASS: ${WP_PASS}
+   DB_HOST: ${WP_HOST}
   volumes:
-   - volume-db:/srv/mysql-db
+   - volume-db:/var/lib/mysql
 
  wordpress:
   container_name: wordpress
@@ -40,7 +41,7 @@ services:
   volumes:
    - volume-web:/var/www/html/
   environment:
-   DB_NAME: ${WP_NANE} 
+   DB_NAME: ${WP_NAME} 
    DB_USER: ${WP_USER}
    DB_PASS: ${WP_PASS}
    DB_HOST: ${WP_HOST}
@@ -62,4 +63,3 @@ volumes:
    type: none
    o: bind
    device: /var/www/html/web
- # attachable: true
