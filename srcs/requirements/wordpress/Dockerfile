@@ -5,6 +5,6 @@ RUN apt install php8.2-fpm -y
 
 RUN apt install php8.2-mysql -y
 
-COPY setup.sh /
+COPY ./content/setup.sh /
 
 ENTRYPOINT ["sh", "setup.sh"]

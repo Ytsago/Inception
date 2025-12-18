@@ -10,7 +10,7 @@ RUN apt remove -y openssl
 
 # COPY content/index.html /var/www/html/index.nginx-debian.html
 
-COPY based.conf /etc/nginx/nginx.conf
+COPY ./content/based.conf /etc/nginx/nginx.conf
 
 EXPOSE 443
 

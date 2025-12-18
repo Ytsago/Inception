@@ -35,6 +35,8 @@ if ! [ -d /var/www/html/wordpress ]; then
 		--admin_email="yes@yes.com" \
 		--skip-email \
 		--path="/var/www/html/wordpress"
+
+	wp theme install impressionist --allow-root --activate
 	
 	wp user create secros secros@secrosmail.com \
 		--allow-root \
