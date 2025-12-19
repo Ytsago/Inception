@@ -45,6 +45,22 @@ services:
    DB_PASS: ${WP_PASS}
    DB_HOST: mariadb
 
+ adminer:
+  container_name: adminer
+  build:
+   context: ./requirements/adminer/
+  networks:
+   - Inception
+  depends_on:
+   - wordpress
+  restart: always
+  environment:
+   DB_NAME: ${WP_NAME} 
+   DB_USER: ${WP_USER}
+   DB_PASS: ${WP_PASS}
+   DB_HOST: mariadb
+
+
 networks:
  Inception:
   driver: bridge
