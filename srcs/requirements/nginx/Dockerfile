@@ -8,9 +8,10 @@ openssl req -newkey rsa:2048 -x509 -nodes -keyout /etc/ssl/private/nginx_selfkey
 
 RUN apt remove -y openssl
 
-# COPY content/index.html /var/www/html/index.nginx-debian.html
+COPY ./content/WebSite/ /var/www/static/website
 
-COPY ./content/based.conf /etc/nginx/nginx.conf
+# COPY ./content/based.conf /etc/nginx/nginx.conf
+COPY ./content/new.conf /etc/nginx/nginx.conf
 
 EXPOSE 443
 

@@ -10,6 +10,7 @@ services:
   depends_on:
    - mariadb
    - wordpress
+   - adminer
   restart: always
   volumes:
    - volume-web:/var/www/html/
@@ -54,6 +55,8 @@ services:
   depends_on:
    - wordpress
   restart: always
+  volumes:
+   - volume-web:/var/www/html/
   environment:
    DB_NAME: ${WP_NAME} 
    DB_USER: ${WP_USER}
