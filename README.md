@@ -4,15 +4,15 @@ This project has been created as part of the 42 curriculum by secros
 
 ### Description
 Inception is a project of 42 school, it involved creating a website using a dockerized environment.
-Each services has to run in their own container and must communicate to other via a private network.
+Each services has to run in their own container and must communicate with others via a private network.
 ### Instruction
 To use this project :
 - Be sure to have docker installed.
-- Also you'ill need sudo right to operate it.
+- Also you'll need sudo right to operate it.
 
 There is a Makefile in the root directory with following command :
 - make 
-*Create the docker images or recreate it if they already exists. Also create the volumes, network and containers if they didn't exists and start them*
+>*Create the docker images or recreate it if they already exists. Also create the volumes, network and containers if they didn't exists and start them*
 - make **up**
 >*Same as make but do not recreate the images.*
 - make **down**
@@ -63,21 +63,20 @@ In the back the volumes is simply a folder stored by default in /var/lib/docker/
 For this project two volume were ask by the subject i choose to bind physically existing folders on the machine by specifying where the volume are stored in the docker-compose. They are respectively located in */var/www/html/*
 
 ### Ressources
-
-for **Docker**:
+###### **Docker**:
 https://docs.docker.com/
 
-for **Nginx**:
+###### **Nginx**:
 https://nginx.org/en/docs/
 https://developer.wordpress.org/advanced-administration/server/web-server/nginx/
 
-for **Wordpress**:
+###### **Wordpress**:
 https://wp-cli.org/
 https://developer.wordpress.org/advanced-administration/
 
-for **Redis**
+###### **Redis**
 https://redis.io/docs/latest/operate/oss_and_stack/
 
-for **vsFTPD**
+###### **vsFTPD**
 https://documentation.ubuntu.com/server/how-to/networking/ftp/
 https://guide.ubuntu-fr.org/server/ftp-server.html
