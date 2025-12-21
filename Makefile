@@ -80,4 +80,4 @@ fclean: clean vclean cclean
 
 re: fclean up
 
-.PHONY: all shell build up down stop set_dir clean vclean cclean fclean re
+.PHONY: all shell logs build up down stop set_dir clean vclean cclean fclean re

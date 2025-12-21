@@ -23,9 +23,9 @@ services:
    - Inception
   restart: always
   environment:
-   DB_NAME: ${WP_NAME} 
-   DB_USER: ${WP_USER}
-   DB_PASS: ${WP_PASS}
+   DB_NAME: ${DB_NAME} 
+   DB_USER: ${DB_USER}
+   DB_PASS: ${DB_PASS}
   volumes:
    - volume-db:/var/lib/mysql
 
@@ -42,10 +42,19 @@ services:
   volumes:
    - volume-web:/var/www/html/
   environment:
-   DB_NAME: ${WP_NAME} 
-   DB_USER: ${WP_USER}
-   DB_PASS: ${WP_PASS}
-   DB_HOST: mariadb
+   DB_NAME: ${DB_NAME} 
+   DB_USER: ${DB_USER}
+   DB_PASS: ${DB_PASS}
+   DB_HOST: ${DB_HOST}
+   WP_ADMIN: ${WP_ADMIN}
+   WP_ADMIN_PASS: ${WP_ADMIN_PASS}
+   WP_ADMIN_MAIL: ${WP_ADMIN_MAIL}
+   WP_USER: ${WP_USER}
+   WP_USER_PASS: ${WP_USER_PASS}
+   WP_USER_MAIL: ${WP_USER_MAIL}
+   WP_USER_ROLE: ${WP_USER_ROLE}
+   WP_URL: ${WP_URL}
+   WP_TITLE: ${WP_TITLE}
 
  adminer:
   container_name: adminer
@@ -59,10 +68,10 @@ services:
   volumes:
    - volume-web:/var/www/html/
   environment:
-   DB_NAME: ${WP_NAME} 
-   DB_USER: ${WP_USER}
-   DB_PASS: ${WP_PASS}
-   DB_HOST: mariadb
+   DB_NAME: ${DB_NAME} 
+   DB_USER: ${DB_USER}
+   DB_PASS: ${DB_PASS}
+   DB_HOST: ${DB_HOST}
 
  redis:
   container_name: redis

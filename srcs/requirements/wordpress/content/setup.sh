@@ -29,11 +29,11 @@ if ! [ -d /var/www/html/wordpress ]; then
 	echo "Creating the config file"
 	wp core install \
 		--allow-root \
-		--url="https://secros.42lyon.fr:4242" \
-		--title="MyAnwsomWebsite" \
-		--admin_user="admin" \
-		--admin_password="admin" \
-		--admin_email="yes@yes.com" \
+		--url="$WP_URL" \
+		--title="$WP_TITLE" \
+		--admin_user="$WP_ADMIN" \
+		--admin_password="$WP_ADMIN_PASS" \
+		--admin_email="$WP_ADMIN_MAIL" \
 		--skip-email \
 		--path="/var/www/html/wordpress"
 	echo "Done !"
@@ -58,10 +58,12 @@ define('WP_CACHE', true);
 
 	wp theme install impressionist --allow-root --activate
 	
-	wp user create secros secros@secrosmail.com \
+	wp user create \
+		$WP_USER \
+		$WP_USER_MAIL \
 		--allow-root \
-		--role="editor" \
-		--user_pass="Banane"
+		--role="$WP_USER_ROLE" \
+		--user_pass="$WP_USER_PASS"
 else
 	echo "Wordpress is already installed"
 fi
