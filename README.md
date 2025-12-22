@@ -12,21 +12,31 @@ To use this project :
 
 There is a Makefile in the root directory with following command :
 - make 
->*Create the docker images or recreate it if they already exists. Also create the volumes, network and containers if they didn't exists and start them*
+>*Create docker images or recreate it if they already exists. Also create the volumes, network and containers if they didn't exists and start them*
+- make **build**
+>*Create docker images*
 - make **up**
->*Same as make but do not recreate the images.*
+>*Start the containers (also create images if they not exists).*
 - make **down**
 >*Stop the containers and destroy them*
 - make **stop**
 >*Only stop containers. Prefer this over recreating every time*
 - make **status**
->*Display information about images and container*
-- make **clear_vol**
+>*Display information about images container and volumes*
+- make **shell** DOCK=<container> [SH='shell']
+>*Connect to a specify container using the given shell or client (by default bash)*
+- make **logs** DOCK=<container>
+>*Display logs about the specify container*
+- make **clean**
+>*Stop the containers and remove the images*
+- make **cclean**
+>*Empty the builder cache*
+- make **vclean**
 >*Remove only the volumes*
-- make **clear**
+- make **fclean**
 >*Remove volumes, containers, images and clear cache*
 - make **re**
->*same as using ***make clear*** and ***make***
+>*same as using ***make fclean*** and ***make***
 
 # Project Description
 
