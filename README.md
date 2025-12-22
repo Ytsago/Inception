@@ -23,9 +23,9 @@ There is a Makefile in the root directory with following command :
 >*Only stop containers. Prefer this over recreating every time*
 - make **status**
 >*Display information about images container and volumes*
-- make **shell** DOCK=<container> [SH='shell']
+- make **shell** DOCK=\<container> [SH='shell']
 >*Connect to a specify container using the given shell or client (by default bash)*
-- make **logs** DOCK=<container>
+- make **logs** DOCK=\<container>
 >*Display logs about the specify container*
 - make **clean**
 >*Stop the containers and remove the images*
