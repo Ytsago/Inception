@@ -53,6 +53,8 @@ body {
 
 .sidebar a {
 	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
 	padding: 14px 20px;
 	text-decoration: none;
 	color: black;
@@ -60,6 +62,8 @@ body {
 	background: #dadada;
 	border: none;
 	font-size: 1.2rem;
+	justify-content: center;
+	align-items: center;
 }
 
 .sidebar img {
