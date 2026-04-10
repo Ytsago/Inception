@@ -1,6 +1,6 @@
 FROM debian:12
 
-RUN apt update -y && apt install -y nginx
+RUN apt update -y && apt install -y nginx 
 
 RUN apt install -y openssl && mkdir -p /etc/ssl/private /etc/ssl/certs && \
 openssl req -newkey rsa:2048 -x509 -nodes -keyout /etc/ssl/private/nginx_selfkey.key \
@@ -8,9 +8,6 @@ openssl req -newkey rsa:2048 -x509 -nodes -keyout /etc/ssl/private/nginx_selfkey
 
 RUN apt remove -y openssl
 
-COPY ./content/WebSite/ /var/www/static/website
-
-# COPY ./content/based.conf /etc/nginx/nginx.conf
 COPY ./content/new.conf /etc/nginx/nginx.conf
 
 EXPOSE 443

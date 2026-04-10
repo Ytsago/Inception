@@ -6,24 +6,36 @@ RED    = \033[31m
 RESET  = \033[0m
 
 # -------VAR---------
-USER			= secros
-DATA_PATH		= /home/$(USER)/data
-COMPOSE_FILE	= ./srcs/docker-compose.yml
-DOCKER_COMPOSE	= sudo docker compose -f $(COMPOSE_FILE)
-DOCK			=
-SH				= 
+USER					= secros
+DATA_PATH				= /home/$(USER)/data
+COMPOSE_FILE			= ./srcs/docker-compose.yml
+COMPOSE_FILE_BONUS		= ./srcs/docker-compose_bonus.yml
+DOCKER_COMPOSE			= sudo docker compose -f $(COMPOSE_FILE)
+DOCKER_COMPOSE_BONUS	= sudo docker compose -f $(COMPOSE_FILE_BONUS) 
+DOCK					=
+SH						= 
 
 # -------RULES-------
 
 all: build up
 
+bonus: build_bonus up_bonus
+
 build: set_dir
 	@echo "$(GREEN)Building docker images...$(RESET)";
-	@$(DOCKER_COMPOSE) build
+	@$(DOCKER_COMPOSE)  build
+
+build_bonus: set_dir
+	@echo "$(GREEN)Building docker images...$(RESET)";
+	@$(DOCKER_COMPOSE_BONUS) build
 
 up: set_dir
 	@echo "$(GREEN)Starting containers$(RESET)";
-	@$(DOCKER_COMPOSE) up -d
+	@$(DOCKER_COMPOSE) up -d --remove-orphans
+
+up_bonus: set_dir
+	@echo "$(GREEN)Starting containers$(RESET)";
+	@$(DOCKER_COMPOSE_BONUS) up -d
 
 set_dir:
 	@echo "$(BLUE)Creating data directories... $(RESET)";
@@ -33,9 +45,17 @@ stop:
 	@echo "$(YELLOW)Stopping containers...$(RESET)";
 	$(DOCKER_COMPOSE) stop
 
+stop_bonus:
+	@echo "$(YELLOW)Stopping containers...$(RESET)";
+	$(DOCKER_COMPOSE_BONUS) stop
+
 down:
 	@echo "$(RED)Removing containers...$(RESET)";
 	$(DOCKER_COMPOSE) down
+
+down_bonus:
+	@echo "$(RED)Removing containers...$(RESET)";
+	$(DOCKER_COMPOSE_BONUS) down
 
 status:
 	@echo "\n$(GREEN)--- IMAGES ---$(RESET)";
@@ -66,7 +86,7 @@ clean:
 vclean:
 	@echo "$(RED)Removing volumes and data...$(RESET)";
 	@if [ $$(sudo docker ps -aq | wc -l) -gt 0 ]; then \
-		make down --no-print-directory; fi
+		make down_bonus --no-print-directory; fi
 	@if [ -n "$$(sudo docker volume ls -q)" ]; then \
 		sudo docker volume rm $$(sudo docker volume ls -q); \
 	fi
@@ -78,6 +98,8 @@ cclean:
 
 fclean: clean vclean cclean
 
-re: fclean up
+re: fclean all
 
-.PHONY: all shell logs build up down stop set_dir clean vclean cclean fclean re
+re_bonus: fclean bonus
+
+.PHONY: all shell logs build up down stop set_dir clean vclean cclean fclean re down_bonus re_bonus up_bonus stop_bonus build_bonus 

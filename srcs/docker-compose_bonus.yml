@@ -24,8 +24,8 @@ services:
    - Inception
   healthcheck:
    test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
-   interval: 10s
-   timeout: 10s
+   interval: 5s
+   timeout: 5s
    retries: 5
   restart: always
   environment:
@@ -35,7 +35,6 @@ services:
   volumes:
    - volume-db:/var/lib/mysql
 
- # depends_on mariadb kept for the eval but may be removed (Only nginx need to wait for both wordpress and mariadb)
  wordpress:
   container_name: wordpress
   build:
@@ -45,9 +44,11 @@ services:
   depends_on:
    mariadb:
     condition: service_healthy
+   redis:
+    condition: service_healthy
   healthcheck:
    test: ["CMD-SHELL", "nc -z localhost 9000"]
-   interval: 10s
+   interval: 5s
    timeout: 5s
    retries: 5
   restart: always
@@ -67,6 +68,59 @@ services:
    WP_USER_ROLE: ${WP_USER_ROLE}
    WP_URL: ${WP_URL}
    WP_TITLE: ${WP_TITLE}
+
+ adminer:
+  container_name: adminer
+  build:
+   context: ./requirements/adminer/
+  networks:
+   - Inception
+  depends_on:
+   wordpress:
+    condition: service_healthy
+  volumes:
+   - volume-web:/var/www/html/
+  environment:
+   DB_NAME: ${DB_NAME} 
+   DB_USER: ${DB_USER}
+   DB_PASS: ${DB_PASS}
+   DB_HOST: ${DB_HOST}
+
+ redis:
+  container_name: redis
+  build:
+   context: ./requirements/redis/
+  networks:
+   - Inception
+  healthcheck:
+   test: ["CMD", "redis-cli", "ping"]
+   interval: 5s
+   timeout: 5s
+   retries: 3
+  restart: always
+
+ vsftp:
+  init: true
+  container_name: vsftp
+  build:
+   context: ./requirements/vsFTP/
+  networks:
+   - Inception
+  restart: always
+  depends_on:
+   - wordpress
+  ports:
+   - 2100:21
+   - 21100-21110:21100-21110
+
+ static:
+  container_name: website
+  build:
+   context: ./requirements/static/
+  networks:
+   - Inception
+  volumes:
+   - volume-web:/media/
 
 networks:
  Inception:

@@ -38,23 +38,25 @@ if ! [ -d /var/www/html/wordpress ]; then
 		--path="/var/www/html/wordpress"
 	echo "Done !"
 
-	echo "Installing the redis plugin"
-	wp plugin install \
-		redis-cache \
-		--allow-root \
-		--activate
+	if [ping -c 1 redis]; then
+		echo "Installing the redis plugin"
+		wp plugin install \
+			redis-cache \
+			--allow-root \
+			--activate
 
-	sed -i "/\/\* That's all, stop editing! Happy publishing. \*\//i \
-define('WP_REDIS_HOST', 'redis');\n\
-define('WP_REDIS_PORT', '6379');\n\
-define('WP_CACHE', true);
-" wp-config.php
+		sed -i "/\/\* That's all, stop editing! Happy publishing. \*\//i \
+	define('WP_REDIS_HOST', 'redis');\n\
+	define('WP_REDIS_PORT', '6379');\n\
+	define('WP_CACHE', true);
+	" wp-config.php
 
-	echo "Testing connection"
-	until wp redis enable --allow-root; do
-		echo "failed"
-		sleep 1;
-	done
+		echo "Testing connection"
+		until wp redis enable --allow-root; do
+			echo "failed"
+			sleep 1;
+		done
+	fi
 
 	wp theme install impressionist --allow-root --activate
 	
