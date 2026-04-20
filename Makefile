@@ -89,12 +89,12 @@ clean_bonus:
 
 vclean:
 	@echo "$(RED)Removing volumes and data...$(RESET)";
-	@if [ $$(sudo docker ps -aq | wc -l) -gt 0 ]; then \
+	@if [ $$(docker ps -aq | wc -l) -gt 0 ]; then \
 		make down_bonus --no-print-directory; fi
-	@if [ -n "$$(sudo docker volume ls -q)" ]; then \
-		sudo docker volume rm $$(sudo docker volume ls -q); \
+	@if [ -n "$$(docker volume ls -q)" ]; then \
+		docker volume rm $$(docker volume ls -q); \
 	fi
-	@rm -rf $(DATA_PATH)/web $(DATA_PATH)/db;
+	@sudo rm -rf $(DATA_PATH)/web $(DATA_PATH)/db;
 
 cclean:
 	@echo "$(RED)Removing cache... $(RESET)";
