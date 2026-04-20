@@ -10,8 +10,8 @@ USER					= secros
 DATA_PATH				= /home/$(USER)/data
 COMPOSE_FILE			= ./srcs/docker-compose.yml
 COMPOSE_FILE_BONUS		= ./srcs/docker-compose_bonus.yml
-DOCKER_COMPOSE			= sudo docker compose -f $(COMPOSE_FILE)
-DOCKER_COMPOSE_BONUS	= sudo docker compose -f $(COMPOSE_FILE_BONUS) 
+DOCKER_COMPOSE			= docker compose -f $(COMPOSE_FILE)
+DOCKER_COMPOSE_BONUS	= docker compose -f $(COMPOSE_FILE_BONUS) 
 DOCK					=
 SH						= 
 
@@ -59,25 +59,25 @@ down_bonus:
 
 status:
 	@echo "\n$(GREEN)--- IMAGES ---$(RESET)";
-	@sudo docker image ls
+	@docker image ls
 	@echo "\n$(GREEN)--- VOLUMES ---$(RESET)";
-	@sudo docker volume ls
+	@docker volume ls
 	@echo "\n$(GREEN)--- CONTAINERS ---$(RESET)";
-	@sudo docker ps -a
+	@docker ps -a
 
 shell:
 ifeq ($(DOCK),)
 	@echo "Usage: make shell DOCK=<container> [SH=shell]"
 	@exit 1
 endif
-	sudo docker exec -it $(DOCK) $(if $(SH),$(SH),bash)
+	docker exec -it $(DOCK) $(if $(SH),$(SH),bash)
 
 logs:
 ifeq ($(DOCK),)
 	@echo "Usage: make logs DOCK=<container>"
 	@exit 1
 endif
-	sudo docker logs $(DOCK)
+	docker logs $(DOCK)
 
 clean:
 	@echo "$(RED)Removing containers and images...$(RESET)";
@@ -94,11 +94,11 @@ vclean:
 	@if [ -n "$$(sudo docker volume ls -q)" ]; then \
 		sudo docker volume rm $$(sudo docker volume ls -q); \
 	fi
-	@sudo rm -rf $(DATA_PATH)/web $(DATA_PATH)/db;
+	@rm -rf $(DATA_PATH)/web $(DATA_PATH)/db;
 
 cclean:
 	@echo "$(RED)Removing cache... $(RESET)";
-	@sudo docker builder prune -af
+	@docker builder prune -af
 
 fclean: clean vclean cclean
 
