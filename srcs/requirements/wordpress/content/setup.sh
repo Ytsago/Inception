@@ -38,7 +38,7 @@ if ! [ -d /var/www/html/wordpress ]; then
 		--path="/var/www/html/wordpress"
 	echo "Done !"
 
-	if [ping -c 1 redis]; then
+	if ping -c 1 redis; then
 		echo "Installing the redis plugin"
 		wp plugin install \
 			redis-cache \

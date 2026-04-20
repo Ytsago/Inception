@@ -83,6 +83,10 @@ clean:
 	@echo "$(RED)Removing containers and images...$(RESET)";
 	@$(DOCKER_COMPOSE) down --rmi all;
 
+clean_bonus:
+	@echo "$(RED)Removing containers and images...$(RESET)";
+	@$(DOCKER_COMPOSE_BONUS) down --rmi all;
+
 vclean:
 	@echo "$(RED)Removing volumes and data...$(RESET)";
 	@if [ $$(sudo docker ps -aq | wc -l) -gt 0 ]; then \
@@ -98,8 +102,10 @@ cclean:
 
 fclean: clean vclean cclean
 
+fclean_bonus: clean_bonus vclean cclean
+
 re: fclean all
 
-re_bonus: fclean bonus
+re_bonus: fclean_bonus bonus
 
-.PHONY: all shell logs build up down stop set_dir clean vclean cclean fclean re down_bonus re_bonus up_bonus stop_bonus build_bonus 
+.PHONY: all shell logs build up down stop set_dir clean vclean cclean fclean re down_bonus re_bonus up_bonus stop_bonus build_bonus fclean_bonus
