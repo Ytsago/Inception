@@ -4,7 +4,7 @@ services:
   build:
    context: ./requirements/nginx/
   ports:
-   - 4242:443
+   - 443:443
   networks: 
    - Inception
   depends_on:
